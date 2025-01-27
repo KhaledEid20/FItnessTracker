@@ -12,8 +12,8 @@ using Workout.Data;
 namespace Workout.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250119164257_Initial Migrations")]
-    partial class InitialMigrations
+    [Migration("20250126203946_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,6 +90,9 @@ namespace Workout.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("AspNetUsers", null, t =>
@@ -114,6 +117,9 @@ namespace Workout.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")

@@ -7,6 +7,6 @@ namespace Workout.Repositories.Base
 {
     public interface IUnitOfWork
     {
-        
+        public IWorkout _workout { get; set; }
     }
 }

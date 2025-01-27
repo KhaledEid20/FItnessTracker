@@ -12,8 +12,8 @@ using identityManagement.Data;
 namespace identityManagement.Migrations
 {
     [DbContext(typeof(AppdbContext))]
-    [Migration("20250119164831_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250126204015_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

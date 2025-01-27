@@ -10,7 +10,7 @@ using identityManagement.Extention;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseUrls("https://localhost:7037");
+builder.WebHost.UseUrls("https://localhost:7164");
 
 builder.Services.AddControllers();
 

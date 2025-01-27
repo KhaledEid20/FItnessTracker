@@ -36,11 +36,6 @@ namespace Workout.Data
             
         }
 
-        internal async Task FirstOrDefaultAsync(Func<object, bool> value)
-        {
-            throw new NotImplementedException();
-        }
-
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     
         public DbSet<Exercise> Exercises { get; set; }

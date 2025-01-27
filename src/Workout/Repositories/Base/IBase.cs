@@ -8,7 +8,7 @@ namespace Workout.Repositories.Base
 {
     public interface IBase<T> where T : class
     {
-        public Task<bool> ValidateUser(string id);
+        public Task<User> ValidateUser();
         public Task<IEnumerable<Exercise>> GetAllExercises();
     }
 }

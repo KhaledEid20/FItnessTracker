@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Workout.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigrations : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,6 +17,7 @@ namespace Workout.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Finished = table.Column<bool>(type: "bit", nullable: false),

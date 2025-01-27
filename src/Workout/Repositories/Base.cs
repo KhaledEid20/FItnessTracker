@@ -12,26 +12,13 @@ namespace Workout.Repositories
     public class Base<T> : IBase<T> where T : class
     {
         public readonly AppDbContext _context;
-        public Base(AppDbContext context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public Base(AppDbContext context , IHttpContextAccessor httpContextAccessor)
         {
             this._context = context;
-        }
+            _httpContextAccessor = httpContextAccessor;
 
-        public async Task<bool> ValidateUser(string id)
-        {
-            try
-            {
-                var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
-                if (user != null)
-                {
-                    return await Task.FromResult(true);
-                }
-                return await Task.FromResult(false);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
         }
         public Task<IEnumerable<Exercise>> GetAllExercises()
         {
@@ -39,6 +26,28 @@ namespace Workout.Repositories
             {
                 var exercises = _context.Exercises.ToList();
                 return Task.FromResult(exercises.AsEnumerable());
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<User> ValidateUser()
+        {
+            try
+            {
+                var HttpContext = _httpContextAccessor.HttpContext;
+                if (HttpContext.Items.TryGetValue("email", out var email))
+                {
+
+                    var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == email.ToString());
+                    if (user != null)
+                    {
+                        return user;
+                    }
+                }
+                return null;
             }
             catch (Exception e)
             {

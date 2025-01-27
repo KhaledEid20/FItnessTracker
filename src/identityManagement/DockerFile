@@ -1,0 +1,21 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+EXPOSE 8080
+
+COPY FitnessTracker.sln FitnessTracker.sln
+
+COPY src/identityManagement/identityManagement.csproj src/identityManagement/identityManagement.csproj
+COPY src/Workout/Workout.csproj src/Workout/Workout.csproj
+COPY src/Reporting/Reporting.csproj src/Reporting/Reporting.csproj
+
+RUN dotnet restore FitnessTracker.sln
+
+COPY src/identityManagement src/identityManagement
+
+WORKDIR /app/src/identityManagement
+RUN dotnet publish -c Release -o /app/src/out
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/src/out .
+ENTRYPOINT [ "dotnet" , "identityManagement.dll" ]

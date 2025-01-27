@@ -10,9 +10,10 @@ namespace Workout.Models
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string UserId { get; set; }
+        public string Title { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime EndDate { get; set; }
-        public bool Finished { get; set; }
+        public bool Finished { get; set; } = false;
         public string Notes { get; set; }
         public User user { get; set; }
         public ICollection<Exercise> Exercises { get; set; }

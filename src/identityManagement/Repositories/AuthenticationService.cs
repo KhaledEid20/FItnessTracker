@@ -98,7 +98,7 @@ namespace identityManagement.Repositories
             var refreshtoken = generateRefreshToken();
             _user.RefreshToken = refreshtoken;
             if(Exp){
-                _user.ExpirationDate = DateTime.UtcNow.AddMinutes(7);
+                _user.ExpirationDate = DateTime.UtcNow.AddDays(7);
             }
             await _userManager.UpdateAsync(_user);
             var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
@@ -134,7 +134,7 @@ namespace identityManagement.Repositories
             var tokens = new JwtSecurityToken (
                 issuer : jwtSetting["Issuer"],
                 claims : claims,
-                expires : DateTime.UtcNow.AddSeconds(5),
+                expires : DateTime.UtcNow.AddHours(5),
                 signingCredentials: sc
             );
             return tokens;
