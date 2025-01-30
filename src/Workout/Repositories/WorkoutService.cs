@@ -62,7 +62,7 @@ namespace Workout.Repositories
                     Success = false
                 };
             }
-            var workout = await _context.WorkOuts.FirstOrDefaultAsync(x => x.UserId == _user.Id && x.CreationDate == workoutId.CreationDate && x.Title == workoutId.Title);
+            var workout = await _context.WorkOuts.FirstOrDefaultAsync(x => x.UserId == _user.Id && x.Title == workoutId.Title && x.Finished == workoutId.Finished);
             try{
                 _context.Remove(workout);
                 await _context.SaveChangesAsync();
@@ -93,7 +93,6 @@ namespace Workout.Repositories
             }
             var workoutToUpdate = await _context.WorkOuts
             .FirstOrDefaultAsync(x => x.UserId == _user.Id 
-            && x.CreationDate == workout.CreationDate 
             && x.Title == workout.old_Title);
             try {
                 workoutToUpdate.Title = workout.Title;
