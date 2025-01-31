@@ -53,6 +53,15 @@ namespace Workout.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost("AssignExcersises")]
+        public async Task<IActionResult> AssignExcersises(List<Guid> guids , WorkoutDto workout){
+            try{
+                return Ok(await _unit._workout.AssignExerciseToWorkout(guids , workout));
+            }
+            catch(Exception ex){
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }

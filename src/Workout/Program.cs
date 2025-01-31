@@ -21,6 +21,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //Repository Pattern
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IWorkout, WorkoutService>();
+builder.Services.AddScoped<IExcersise, ExcersiseService>();
 
 var jwtSetting = builder.Configuration.GetSection("jwtSettings");
 var secret = Environment.GetEnvironmentVariable("SECRET");

@@ -14,5 +14,6 @@ namespace Workout.Repositories.Base
         Task<ResultDto> CreateWorkout(CreateWorkoutDto workout);
         Task<ResultDto> UpdateWorkout(WorkoutDto workout);
         Task<ResultDto> DeleteWorkout(WorkoutDto workoutDTO);
+        Task<ResultDto> AssignExerciseToWorkout(List<Guid> guids , WorkoutDto workout);
     }
 }

@@ -16,6 +16,7 @@ namespace Workout.Repositories
         {}
 
         public User _user { get; set; }
+
         public async Task<ResultDto> CreateWorkout(CreateWorkoutDto workout)
         {
             _user = await ValidateUser();
@@ -115,7 +116,44 @@ namespace Workout.Repositories
                 Message = "Workout updated successfully",
                 Success = true
             };
+        }
+
+        public async Task<ResultDto> AssignExerciseToWorkout(List<Guid> guids , WorkoutDto workout)
+        {
+            _user = await ValidateUser();
+            if(_user == null)        
+            {
+                return new ResultDto
+                {
+                    Message = "User not found",
+                    Success = false
+            };
+            }
+            var Workout1 = await _context.WorkOuts
+            .FirstOrDefaultAsync(x => x.UserId == _user.Id 
+            && x.Title == workout.old_Title);
+            WorkoutExercise elements = new() {
+
+            };
+            foreach(Guid guid in guids){
+                elements.WorkoutId = Workout1.Id;
+                elements.ExerciseId = guid;
+            }
+            try{
+                await _context.WorkoutExercises.AddAsync(elements);
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception ex){
+                return new ResultDto(){
+                    Message = ex.Message,
+                    Success = false
+                };
+            }
+            return new ResultDto(){
+                Message = "The Excersises Succesfully added",
+                Success = true
+            };
+        }
 
         }
-    }
 }

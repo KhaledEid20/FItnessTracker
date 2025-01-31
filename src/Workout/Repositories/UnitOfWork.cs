@@ -9,9 +9,12 @@ namespace Workout.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         public IWorkout _workout { get; set; }
-        public UnitOfWork(IWorkout workout)
+        public IExcersise _excersise { get; set; }
+
+        public UnitOfWork(IWorkout workout , IExcersise excersise)
         {
             _workout = workout;
+            _excersise = excersise;
         }
     }
 }
