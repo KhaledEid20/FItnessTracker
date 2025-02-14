@@ -13,14 +13,14 @@ public class ExcersiseService : Base<Exercise>,IExcersise
     {
     }
 
-    public async Task<ResultDto> CreateExercise(ExerciseDTO createExerciseDTO)
+    public async Task<ResultDto<string>> CreateExercise(ExerciseDTO EX)
     {
-        Exercise ex = new(){
-            ExerciseName = createExerciseDTO.ExerciseName,
-            TargetMuscle = createExerciseDTO.TargetMuscle,
-            SecondaryMuscle = createExerciseDTO.SecondaryMuscle,
-            Counts = createExerciseDTO.Counts,
-            Groups = createExerciseDTO.Groups
+        var ex = new Exercise(){
+            ExerciseName = EX.ExerciseName,
+            TargetMuscle = EX.TargetMuscle,
+            SecondaryMuscle = EX.SecondaryMuscle,
+            Counts = EX.Counts,
+            Groups = EX.Groups
         };
         try{
             await _context.Exercises.AddAsync(ex);
@@ -28,25 +28,25 @@ public class ExcersiseService : Base<Exercise>,IExcersise
 
         }catch(Exception e)
         {
-            return new ResultDto
+            return new ResultDto<string>()
             {
                 Message = e.Message,
                 Success = false
             };
         }
-        return new ResultDto
+        return new ResultDto<string>()
         {
             Message = "Exercise Created",
             Success = true
         };
     } 
 
-    public async Task<ResultDto> DeleteExercise(Guid id)
+    public async Task<ResultDto<string>> DeleteExercise(Guid id)
     {
         var ex = await _context.Exercises.FindAsync(id);
         if(ex == null)
         {
-            return new ResultDto
+            return new ResultDto<string>()
             {
                 Message = "Exercise not found",
                 Success = false
@@ -57,59 +57,64 @@ public class ExcersiseService : Base<Exercise>,IExcersise
             await _context.SaveChangesAsync();
         }catch(Exception e)
         {
-            return new ResultDto
+            return new ResultDto<string>()
             {
                 Message = e.Message,
                 Success = false
             };
         }
-        return new ResultDto
+        return new ResultDto<string>()
         {
             Message = "Exercise Deleted",
             Success = true
         };
     }
 
-    public async Task<IEnumerable<Exercise>> GetAllExercises()
+
+    public async Task<ResultDto<string>> UpdateExercise(Guid id, ExerciseDTO EX)
+    {
+        var exercise = await _context.Exercises.FindAsync(id);
+        if(exercise == null)
+        {
+            return new ResultDto<string>()
+            {
+                Message = "Exercise not found",
+                Success = false
+            };
+        }
+        exercise.ExerciseName = EX.ExerciseName;
+        exercise.TargetMuscle = EX.TargetMuscle;
+        exercise.SecondaryMuscle = EX.SecondaryMuscle;
+        exercise.Counts = EX.Counts;
+        exercise.Groups = EX.Groups;
+        try{
+            _context.Exercises.Update(exercise);
+            _context.SaveChanges();
+        }catch(Exception e)
+        {
+            return new ResultDto<string>()
+            {
+                Message = e.Message,
+                Success = false
+            };
+        }
+        return new ResultDto<string>()
+        {
+            Message = "Exercise Updated",
+            Success = true
+        };
+    }
+
+    public async Task<ResultDto<List<Exercise>>> GetAllExercises()
     {
         var exercises = await _context.Exercises.ToListAsync();
         if(exercises == null)
         {
             return null;
         }
-        return exercises;
-    }
-
-    public async Task<ResultDto> UpdateExercise(Guid id, ExerciseDTO createExerciseDTO)
-    {
-        var exercise = await _context.Exercises.FindAsync(id);
-        if(exercise == null)
+        return new ResultDto<List<Exercise>>()
         {
-            return new ResultDto
-            {
-                Message = "Exercise not found",
-                Success = false
-            };
-        }
-        exercise.ExerciseName = createExerciseDTO.ExerciseName;
-        exercise.TargetMuscle = createExerciseDTO.TargetMuscle;
-        exercise.SecondaryMuscle = createExerciseDTO.SecondaryMuscle;
-        exercise.Counts = createExerciseDTO.Counts;
-        exercise.Groups = createExerciseDTO.Groups;
-        try{
-            _context.Exercises.Update(exercise);
-            _context.SaveChanges();
-        }catch(Exception e)
-        {
-            return new ResultDto
-            {
-                Message = e.Message,
-                Success = false
-            };
-        }
-        return new ResultDto
-        {
-            Message = "Exercise Updated",
+            Data = exercises,
             Success = true
         };
     }

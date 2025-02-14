@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Workout.Data;
 using Workout.DTOs;
@@ -12,17 +13,20 @@ namespace Workout.Repositories
 {
     public class WorkoutService : Base<WorkOut> , IWorkout
     {
-        public WorkoutService(AppDbContext context , IHttpContextAccessor httpContextAccessor) : base(context , httpContextAccessor)
-        {}
+        public IMapper _mapper { get; set; }
+        public WorkoutService(AppDbContext context , IHttpContextAccessor httpContextAccessor , IMapper mapper) : base(context , httpContextAccessor)
+        {
+            _mapper = mapper;
+        }
 
         public User _user { get; set; }
 
-        public async Task<ResultDto> CreateWorkout(CreateWorkoutDto workout)
+        public async Task<ResultDto<string>> CreateWorkout(CreateWorkoutDto workout)
         {
             _user = await ValidateUser();
             if (_user == null)
             {
-                return new ResultDto
+                return new ResultDto<string>()
                 {
                     Message = "User not found",
                     Success = false
@@ -40,61 +44,55 @@ namespace Workout.Repositories
                 await _context.SaveChangesAsync();
             }
             catch(Exception ex){
-                return new ResultDto
+                return new ResultDto<string>()
                 {
                     Message = ex.Message,
                     Success = false
                 };
             }
-            return new ResultDto
+            return new ResultDto<string>()
             {
                 Message = "Workout created successfully",
                 Success = true
             };
         }
-        public async Task<ResultDto> DeleteWorkout(WorkoutDto workoutId)
+        public async Task<ResultDto<string>> DeleteWorkout(Guid workoutId)
         {
-            _user = await ValidateUser();
-            if(_user == null)        
-            {
-                return new ResultDto
+            var workout = await _context.WorkOuts.FindAsync(workoutId);
+            if(workout == null){
+                return new ResultDto<string>()
                 {
-                    Message = "User not found",
+                    Message = "Workout not found",
                     Success = false
                 };
             }
-            var workout = await _context.WorkOuts.FirstOrDefaultAsync(x => x.UserId == _user.Id && x.Title == workoutId.Title && x.Finished == workoutId.Finished);
             try{
                 _context.Remove(workout);
                 await _context.SaveChangesAsync();
             }
             catch(Exception ex){
-                return new ResultDto
+                return new ResultDto<string>()
                 {
                     Message = ex.Message,
                     Success = false
                 };
             }
-            return new ResultDto
+            return new ResultDto<string>()
             {
                 Message = "Workout deleted successfully",
                 Success = true
             };
         }
-        public async Task<ResultDto> UpdateWorkout(WorkoutDto workout)
+        public async Task<ResultDto<string>> UpdateWorkout(WorkoutDto workout , Guid workoutId)
         {
-            _user = await ValidateUser();
-            if(_user == null)        
-            {
-                return new ResultDto
+            var workoutToUpdate = await _context.WorkOuts.FindAsync(workoutId);
+            if(workoutToUpdate == null){
+                return new ResultDto<string>()
                 {
-                    Message = "User not found",
+                    Message = "Workout not found",
                     Success = false
                 };
             }
-            var workoutToUpdate = await _context.WorkOuts
-            .FirstOrDefaultAsync(x => x.UserId == _user.Id 
-            && x.Title == workout.old_Title);
             try {
                 workoutToUpdate.Title = workout.Title;
                 workoutToUpdate.Notes = workout.Notes;
@@ -105,55 +103,105 @@ namespace Workout.Repositories
                 await _context.SaveChangesAsync();
             }
             catch(Exception ex){
-                return new ResultDto
+                return new ResultDto<string>()
                 {
                     Message = ex.Message,
                     Success = false
                 };
             }
-            return new ResultDto
+            return new ResultDto<string>()
             {
                 Message = "Workout updated successfully",
                 Success = true
             };
         }
-
-        public async Task<ResultDto> AssignExerciseToWorkout(List<Guid> guids , WorkoutDto workout)
+        public async Task<ResultDto<string>> AssignExerciseToWorkout(List<string> guids , Guid workoutId)
         {
             _user = await ValidateUser();
             if(_user == null)        
             {
-                return new ResultDto
+                return new ResultDto<string>()
                 {
                     Message = "User not found",
                     Success = false
-            };
+                };
             }
-            var Workout1 = await _context.WorkOuts
-            .FirstOrDefaultAsync(x => x.UserId == _user.Id 
-            && x.Title == workout.old_Title);
-            WorkoutExercise elements = new() {
-
-            };
-            foreach(Guid guid in guids){
-                elements.WorkoutId = Workout1.Id;
-                elements.ExerciseId = guid;
+            if(workoutId == null){
+                return new ResultDto<string>()
+                {
+                    Message = "Workout not found",
+                    Success = false
+                };
+            }
+            var Workout1 = await _context.WorkOuts.FindAsync(workoutId);
+            if(Workout1 == null){
+                return new ResultDto<string>(){
+                    Message = "Workout not found",
+                    Success = false
+                };
+            }
+            List<WorkoutExercise> elements = new List<WorkoutExercise>();
+            foreach(var guid in guids){
+                elements.Add(new WorkoutExercise{
+                    WorkoutId = workoutId,
+                    ExerciseId = Guid.Parse(guid)
+                });
             }
             try{
-                await _context.WorkoutExercises.AddAsync(elements);
+                await _context.WorkoutExercises.AddRangeAsync(elements);
                 await _context.SaveChangesAsync();
             }
             catch(Exception ex){
-                return new ResultDto(){
+                return new ResultDto<string>(){
                     Message = ex.Message,
                     Success = false
                 };
             }
-            return new ResultDto(){
+            return new ResultDto<string>(){
                 Message = "The Excersises Succesfully added",
                 Success = true
             };
         }
+        public async Task<ResultDto<IEnumerable<GetWorkoutDTO>>> GetAllWorkouts()
+        {
+            var workouts = await _context.WorkOuts
+                .Join(_context.Users,
+                    w => w.UserId,
+                    u => u.Id,
+                    (w, u) => new { w, u.UserName })
+                .Join(_context.WorkoutExercises,
+                    wu => wu.w.Id,
+                    we => we.WorkoutId,
+                    (wu, we) => new { wu.w, wu.UserName, we.ExerciseId })
+                .GroupBy(g => new { g.w.Id, g.UserName, g.w.Title, g.w.CreationDate, g.w.Notes , g.w.EndDate , g.w.Finished })
+                .Select(group => new GetWorkoutDTO
+                {
+                    Id = group.Key.Id,
+                    name = group.Key.UserName,
+                    Title = group.Key.Title,
+                    CreationDate = group.Key.CreationDate,
+                    EndDate = group.Key.EndDate,
+                    Finished = group.Key.Finished,
+                    Notes = group.Key.Notes,
+                    ExerciseIds = group.Select(g => g.ExerciseId).ToList()
+                })
+                .OrderByDescending(g => g.CreationDate)
+                .ToListAsync();
 
+
+            if(workouts == null)
+            {
+                throw new Exception("No workouts found");
+            }
+
+            return new ResultDto<IEnumerable<GetWorkoutDTO>>()
+            {
+                Message = "Workouts found",
+                Success = true,
+                Data = workouts
+            };
+            
         }
+
+    }
 }

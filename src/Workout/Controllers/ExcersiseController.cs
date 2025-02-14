@@ -7,10 +7,10 @@ namespace Workout.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ExcersiseServices : ControllerBase
+    public class ExcersiseController : ControllerBase
     {
         public IUnitOfWork _unit { get; set; }
-        public ExcersiseServices(IUnitOfWork unit)
+        public ExcersiseController(IUnitOfWork unit)
         {
             _unit = unit;
         }
@@ -27,7 +27,7 @@ namespace Workout.Controllers
             return Ok(await _unit._excersise.UpdateExercise(id , exercise));
         }
         [HttpDelete("Delete")]
-        public async Task<IActionResult> delete(Guid id){
+        public async Task<IActionResult> delete([FromQuery]Guid id){
             return Ok(await _unit._excersise.DeleteExercise(id));
         }
     }

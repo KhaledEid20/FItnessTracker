@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   mssql:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -9,5 +11,32 @@ services:
       - "1432:1433"
     volumes:
       - mssql-data:/var/opt/mssql
+
+  # identity-svc:
+  #   image: identity-svc:latest
+  #   build:
+  #     context: .
+  #     dockerfile: src/identityManagement/DockerFile
+  #   environment:
+  #     - ASPNETCORE_URLS=http://+:8080
+  #     - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=FitnessTracker;User Id=sa;Password=StrongP@ssw0rd!;TrustServerCertificate=True;
+  #   ports:
+  #     - "7146:8080"
+  #   depends_on:
+  #     - mssql
+
+  # workout-svc:
+  #   image: workout-svc:latest
+  #   build:
+  #     context: .
+  #     dockerfile: src/Workout/DockerFile
+  #   environment:
+  #     - ASPNETCORE_URLS=http://+:8080
+  #     - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=FitnessTracker;User Id=sa;Password=StrongP@ssw0rd!;TrustServerCertificate=True;
+  #   ports:
+  #     - "7000:8080"
+  #   depends_on:
+  #     - mssql
+
 volumes:
   mssql-data:

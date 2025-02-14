@@ -16,7 +16,7 @@ namespace Workout.Models
         public bool Finished { get; set; } = false;
         public string Notes { get; set; }
         public User user { get; set; }
-        public ICollection<WorkoutExercise> WorkoutExercises { get; set; }
+        public ICollection<WorkoutExercise> WorkoutExercises { get; set; } =  new List<WorkoutExercise>();
         public ICollection<Comment> Comments { get; set; }
     }
 }

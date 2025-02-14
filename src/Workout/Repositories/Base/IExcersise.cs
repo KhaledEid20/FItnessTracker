@@ -6,8 +6,8 @@ namespace Workout.Repositories.Base;
 
 public interface IExcersise
 {
-    Task<ResultDto> CreateExercise(ExerciseDTO createExerciseDTO);
-    Task<ResultDto> UpdateExercise(Guid id, ExerciseDTO createExerciseDTO);
-    Task<ResultDto> DeleteExercise(Guid id);
-    Task<IEnumerable<Exercise>> GetAllExercises();
+    Task<ResultDto<string>> CreateExercise(ExerciseDTO createExerciseDTO);
+    Task<ResultDto <string>> UpdateExercise(Guid id, ExerciseDTO createExerciseDTO);
+    Task<ResultDto<string>> DeleteExercise(Guid id);
+    Task<ResultDto<List<Exercise>>> GetAllExercises();
 }

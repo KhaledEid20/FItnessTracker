@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Workout.Data;
 using Workout.Middleware;
 using Workout.Repositories;
 using Workout.Repositories.Base;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,8 @@ builder.Services.AddScoped<IExcersise, ExcersiseService>();
 
 var jwtSetting = builder.Configuration.GetSection("jwtSettings");
 var secret = Environment.GetEnvironmentVariable("SECRET");
+
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.AddAuthentication(option => {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

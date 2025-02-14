@@ -13,6 +13,6 @@ namespace Workout.Models
         public string SecondaryMuscle { get; set; }
         public int Counts { get; set; }
         public int Groups { get; set; }
-        public ICollection<WorkoutExercise> WorkoutExercises { get; set; }
+        public ICollection<WorkoutExercise> WorkoutExercises { get; set; } =  new List<WorkoutExercise>();
     }
 }

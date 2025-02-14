@@ -17,6 +17,7 @@ namespace Workout.Controllers
         {
             _unit = unit;
         }
+        
         [HttpPost("create")]
         public async Task<ActionResult> CreateWorkout([FromBody] CreateWorkoutDto workout)
         {
@@ -29,8 +30,9 @@ namespace Workout.Controllers
                 return BadRequest(ex.Message);
             }
         }   
+        
         [HttpDelete("Delete")]
-        public async Task<ActionResult> Delete([FromBody] WorkoutDto workout)
+        public async Task<ActionResult> Delete([FromQuery] Guid workout)
         {
             try{
                 var Workout = await _unit._workout.DeleteWorkout(workout);
@@ -41,11 +43,12 @@ namespace Workout.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
         [HttpPut("Update")]
-        public async Task<ActionResult> Update([FromBody] WorkoutDto workout)
+        public async Task<ActionResult> Update([FromBody] WorkoutDto workout ,[FromQuery]Guid workoutId)
         {
             try{
-                var Workout = await _unit._workout.UpdateWorkout(workout);
+                var Workout = await _unit._workout.UpdateWorkout(workout , workoutId);
                 return Ok(Workout);
             }
             catch(Exception ex)
@@ -53,8 +56,9 @@ namespace Workout.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
         [HttpPost("AssignExcersises")]
-        public async Task<IActionResult> AssignExcersises(List<Guid> guids , WorkoutDto workout){
+        public async Task<IActionResult> AssignExcersises([FromQuery]Guid workout,[FromBody]List<string> guids){
             try{
                 return Ok(await _unit._workout.AssignExerciseToWorkout(guids , workout));
             }
@@ -62,6 +66,15 @@ namespace Workout.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        
+        [HttpGet("GetAllWorkouts")]
+        public async Task<IActionResult> GetWorkouts(){
+            try{
+                return Ok(await _unit._workout.GetAllWorkouts());
+            }
+            catch(Exception ex){
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
