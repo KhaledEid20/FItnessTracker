@@ -32,7 +32,7 @@ namespace Workout.Controllers
         }   
         
         [HttpDelete("Delete")]
-        public async Task<ActionResult> Delete([FromQuery] Guid workout)
+        public async Task<ActionResult> Delete([FromQuery] string workout)
         {
             try{
                 var Workout = await _unit._workout.DeleteWorkout(workout);
@@ -45,7 +45,7 @@ namespace Workout.Controllers
         }
         
         [HttpPut("Update")]
-        public async Task<ActionResult> Update([FromBody] WorkoutDto workout ,[FromQuery]Guid workoutId)
+        public async Task<ActionResult> Update([FromBody] WorkoutDto workout ,[FromQuery]string workoutId)
         {
             try{
                 var Workout = await _unit._workout.UpdateWorkout(workout , workoutId);
@@ -58,7 +58,7 @@ namespace Workout.Controllers
         }
         
         [HttpPost("AssignExcersises")]
-        public async Task<IActionResult> AssignExcersises([FromQuery]Guid workout,[FromBody]List<string> guids){
+        public async Task<IActionResult> AssignExcersises([FromQuery]string workout,[FromBody]List<string> guids){
             try{
                 return Ok(await _unit._workout.AssignExerciseToWorkout(guids , workout));
             }

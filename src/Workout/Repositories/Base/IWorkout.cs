@@ -13,8 +13,8 @@ namespace Workout.Repositories.Base
     {
         Task<ResultDto<IEnumerable<GetWorkoutDTO>>> GetAllWorkouts();
         Task<ResultDto<string>> CreateWorkout(CreateWorkoutDto workout);
-        Task<ResultDto<string>> UpdateWorkout(WorkoutDto workout , Guid workoutId);
-        Task<ResultDto<string>> DeleteWorkout(Guid workoutId);
-        Task<ResultDto<string>> AssignExerciseToWorkout(List<string> guids , Guid workoutId);
+        Task<ResultDto<string>> UpdateWorkout(WorkoutDto workout , string workoutId);
+        Task<ResultDto<string>> DeleteWorkout(string workoutId);
+        Task<ResultDto<string>> AssignExerciseToWorkout(List<string> guids , string workoutId);
     }
 }

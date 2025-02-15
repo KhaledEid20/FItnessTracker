@@ -56,9 +56,9 @@ namespace Workout.Repositories
                 Success = true
             };
         }
-        public async Task<ResultDto<string>> DeleteWorkout(Guid workoutId)
+        public async Task<ResultDto<string>> DeleteWorkout(string workoutId)
         {
-            var workout = await _context.WorkOuts.FindAsync(workoutId);
+            var workout = await _context.WorkOuts.FirstOrDefaultAsync(w=> w.Id == workoutId);
             if(workout == null){
                 return new ResultDto<string>()
                 {
@@ -83,9 +83,9 @@ namespace Workout.Repositories
                 Success = true
             };
         }
-        public async Task<ResultDto<string>> UpdateWorkout(WorkoutDto workout , Guid workoutId)
+        public async Task<ResultDto<string>> UpdateWorkout(WorkoutDto workout , string workoutId)
         {
-            var workoutToUpdate = await _context.WorkOuts.FindAsync(workoutId);
+            var workoutToUpdate = await _context.WorkOuts.FirstOrDefaultAsync(w=> w.Id == workoutId);
             if(workoutToUpdate == null){
                 return new ResultDto<string>()
                 {
@@ -115,7 +115,7 @@ namespace Workout.Repositories
                 Success = true
             };
         }
-        public async Task<ResultDto<string>> AssignExerciseToWorkout(List<string> guids , Guid workoutId)
+        public async Task<ResultDto<string>> AssignExerciseToWorkout(List<string> guids , string workoutId)
         {
             _user = await ValidateUser();
             if(_user == null)        
@@ -133,7 +133,7 @@ namespace Workout.Repositories
                     Success = false
                 };
             }
-            var Workout1 = await _context.WorkOuts.FindAsync(workoutId);
+            var Workout1 = await _context.WorkOuts.FirstOrDefaultAsync(w=> w.Id == workoutId);
             if(Workout1 == null){
                 return new ResultDto<string>(){
                     Message = "Workout not found",
@@ -143,8 +143,8 @@ namespace Workout.Repositories
             List<WorkoutExercise> elements = new List<WorkoutExercise>();
             foreach(var guid in guids){
                 elements.Add(new WorkoutExercise{
-                    WorkoutId = workoutId,
-                    ExerciseId = Guid.Parse(guid)
+                    WorkoutId = workoutId.ToString(),
+                    ExerciseId = guid
                 });
             }
             try{

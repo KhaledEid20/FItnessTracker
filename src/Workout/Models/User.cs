@@ -11,6 +11,6 @@ namespace Workout.Models
         public string Email { get; set; }
         public string UserName { get; set; }
         public ICollection<WorkOut> workOut { get; set; }
-        public ICollection<Comment> Comments { get; set; }
+        public ICollection<Usercomment> comments { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 using System;
-using Microsoft.EntityFrameworkCore;
+ing Microsoft.EntityFrameworkCore;
 using Workout.Data;
 using Workout.DTOs;
 using Workout.Models;
@@ -41,9 +41,9 @@ public class ExcersiseService : Base<Exercise>,IExcersise
         };
     } 
 
-    public async Task<ResultDto<string>> DeleteExercise(Guid id)
+    public async Task<ResultDto<string>> DeleteExercise(string id)
     {
-        var ex = await _context.Exercises.FindAsync(id);
+        var ex = await _context.Exercises.FirstOrDefaultAsync( x => x.Id== id);
         if(ex == null)
         {
             return new ResultDto<string>()
@@ -71,9 +71,9 @@ public class ExcersiseService : Base<Exercise>,IExcersise
     }
 
 
-    public async Task<ResultDto<string>> UpdateExercise(Guid id, ExerciseDTO EX)
+    public async Task<ResultDto<string>> UpdateExercise(string id, ExerciseDTO EX)
     {
-        var exercise = await _context.Exercises.FindAsync(id);
+        var exercise = await _context.Exercises.FirstOrDefaultAsync( x => x.Id== id);
         if(exercise == null)
         {
             return new ResultDto<string>()

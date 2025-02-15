@@ -8,7 +8,7 @@ namespace Workout.Models
 {
     public class WorkOut
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string UserId { get; set; }
         public string Title { get; set; }
         public DateTime CreationDate { get; set; }

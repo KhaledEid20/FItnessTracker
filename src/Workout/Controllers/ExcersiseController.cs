@@ -23,11 +23,11 @@ namespace Workout.Controllers
             return Ok(await _unit._excersise.CreateExercise(exercise));
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> update(Guid id, ExerciseDTO exercise){
+        public async Task<IActionResult> update(string id, ExerciseDTO exercise){
             return Ok(await _unit._excersise.UpdateExercise(id , exercise));
         }
         [HttpDelete("Delete")]
-        public async Task<IActionResult> delete([FromQuery]Guid id){
+        public async Task<IActionResult> delete([FromQuery]string id){
             return Ok(await _unit._excersise.DeleteExercise(id));
         }
     }

@@ -4,8 +4,8 @@ namespace Workout.Models;
 
 public class WorkoutExercise
 {
-    public Guid ExerciseId { get; set; }
+    public string ExerciseId { get; set; }
     public Exercise Exercise { get; set; }
-    public Guid WorkoutId { get; set; }
+    public string WorkoutId { get; set; }
     public WorkOut Workout { get; set; }
 }

@@ -7,7 +7,7 @@ namespace Workout.Models
 {
     public class Exercise
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string ExerciseName { get; set; }
         public string TargetMuscle { get; set; }
         public string SecondaryMuscle { get; set; }

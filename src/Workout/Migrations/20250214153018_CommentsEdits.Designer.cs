@@ -12,8 +12,8 @@ using Workout.Data;
 namespace Workout.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250130123050_WorkoutExercise")]
-    partial class WorkoutExercise
+    [Migration("20250214153018_CommentsEdits")]
+    partial class CommentsEdits
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,22 +27,19 @@ namespace Workout.Migrations
 
             modelBuilder.Entity("Workout.Models.Comment", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WorkoutId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("WorkoutId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.HasIndex("WorkoutId");
 
@@ -51,9 +48,8 @@ namespace Workout.Migrations
 
             modelBuilder.Entity("Workout.Models.Exercise", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Counts")
                         .HasColumnType("int");
@@ -70,15 +66,7 @@ namespace Workout.Migrations
                     b.Property<string>("TargetMuscle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("WorkoutId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("userId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("userId");
 
                     b.ToTable("Exercises");
                 });
@@ -91,6 +79,9 @@ namespace Workout.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("AspNetUsers", null, t =>
@@ -99,11 +90,25 @@ namespace Workout.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Workout.Models.Usercomment", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CommentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "CommentId");
+
+                    b.HasIndex("CommentId");
+
+                    b.ToTable("UsersComments");
+                });
+
             modelBuilder.Entity("Workout.Models.WorkOut", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
@@ -132,11 +137,11 @@ namespace Workout.Migrations
 
             modelBuilder.Entity("Workout.Models.WorkoutExercise", b =>
                 {
-                    b.Property<Guid>("ExerciseId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ExerciseId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("WorkoutId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("WorkoutId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ExerciseId", "WorkoutId");
 
@@ -147,26 +152,28 @@ namespace Workout.Migrations
 
             modelBuilder.Entity("Workout.Models.Comment", b =>
                 {
-                    b.HasOne("Workout.Models.User", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId");
-
                     b.HasOne("Workout.Models.WorkOut", "workOut")
                         .WithMany("Comments")
-                        .HasForeignKey("WorkoutId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                        .HasForeignKey("WorkoutId");
 
                     b.Navigation("workOut");
                 });
 
-            modelBuilder.Entity("Workout.Models.Exercise", b =>
+            modelBuilder.Entity("Workout.Models.Usercomment", b =>
                 {
+                    b.HasOne("Workout.Models.Comment", "comment")
+                        .WithMany("comments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Workout.Models.User", "user")
-                        .WithMany()
-                        .HasForeignKey("userId");
+                        .WithMany("comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("comment");
 
                     b.Navigation("user");
                 });
@@ -199,6 +206,11 @@ namespace Workout.Migrations
                     b.Navigation("Workout");
                 });
 
+            modelBuilder.Entity("Workout.Models.Comment", b =>
+                {
+                    b.Navigation("comments");
+                });
+
             modelBuilder.Entity("Workout.Models.Exercise", b =>
                 {
                     b.Navigation("WorkoutExercises");
@@ -206,7 +218,7 @@ namespace Workout.Migrations
 
             modelBuilder.Entity("Workout.Models.User", b =>
                 {
-                    b.Navigation("Comments");
+                    b.Navigation("comments");
 
                     b.Navigation("workOut");
                 });
