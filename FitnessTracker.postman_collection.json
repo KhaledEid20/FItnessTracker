@@ -1,0 +1,1031 @@
+{
+	"info": {
+		"_postman_id": "d568fa56-9ac7-4cea-ae07-a60899859695",
+		"name": "FitnessTracker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34693611"
+	},
+	"item": [
+		{
+			"name": "Identity server",
+			"item": [
+				{
+					"name": "Account",
+					"item": [
+						{
+							"name": "Register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var Rjson = pm.response.json();\r",
+											"\r",
+											"pm.collectionVariables.set(\"CCode\" , Rjson.code);\r",
+											"pm.collectionVariables.set(\"Cemail\" , Rjson.email);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"UserName\" : \"Khaled\",\r\n    \"Email\" : \"Khaled@gmail.com\",\r\n    \"password\" : \"HelloWorld123\",\r\n    \"phoneNumber\" : \"01013666403\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Authentication_Service}}/api/Register",
+									"host": [
+										"{{Authentication_Service}}"
+									],
+									"path": [
+										"api",
+										"Register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Authentication_Service}}/api/confirmEmail?email={{Cemail}}&code={{CCode}}",
+									"host": [
+										"{{Authentication_Service}}"
+									],
+									"path": [
+										"api",
+										"confirmEmail"
+									],
+									"query": [
+										{
+											"key": "code",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "email",
+											"value": "{{Cemail}}"
+										},
+										{
+											"key": "code",
+											"value": "{{CCode}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var rj = pm.response.json();\r",
+											"\r",
+											"pm.collectionVariables.set(\"AccessToken\" , rj.token);\r",
+											"pm.collectionVariables.set(\"RefreshToken\" , rj.refreshToken);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Email\" : \"Khaled@gmail.com\",\r\n    \"password\" : \"HelloWorld123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Authentication_Service}}/api/Login",
+									"host": [
+										"{{Authentication_Service}}"
+									],
+									"path": [
+										"api",
+										"Login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var rj = pm.response.json();",
+											"",
+											"pm.collectionVariables.set(\"AccessToken\" , rj.token);",
+											"pm.collectionVariables.set(\"RefreshToken\" , rj.refreshToken);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"AccessToken\": \"{{AccessToken}}\",\r\n    \"RefreshToken\": \"{{RefreshToken}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Authentication_Service}}/api/refresh",
+									"host": [
+										"{{Authentication_Service}}"
+									],
+									"path": [
+										"api",
+										"refresh"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "Claims",
+							"item": [
+								{
+									"name": "Claim To User",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{Authentication_Service}}/api/Admin/AddClaimToUser?Email={{Cemail}}&ClaimName=Level&ClaimValue=Super",
+											"host": [
+												"{{Authentication_Service}}"
+											],
+											"path": [
+												"api",
+												"Admin",
+												"AddClaimToUser"
+											],
+											"query": [
+												{
+													"key": "Email",
+													"value": "{{Cemail}}"
+												},
+												{
+													"key": "ClaimName",
+													"value": "Level"
+												},
+												{
+													"key": "ClaimValue",
+													"value": "Super"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Claim To Role",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{Authentication_Service}}/api/Admin/addClaimTORole/?Rolename=Admin&claimName=level&ClaimValue=High",
+											"host": [
+												"{{Authentication_Service}}"
+											],
+											"path": [
+												"api",
+												"Admin",
+												"addClaimTORole",
+												""
+											],
+											"query": [
+												{
+													"key": "Rolename",
+													"value": "Admin"
+												},
+												{
+													"key": "claimName",
+													"value": "level"
+												},
+												{
+													"key": "ClaimValue",
+													"value": "High"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Add Role",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{Authentication_Service}}/api/Admin/AddRole?Role=Admin",
+									"host": [
+										"{{Authentication_Service}}"
+									],
+									"path": [
+										"api",
+										"Admin",
+										"AddRole"
+									],
+									"query": [
+										{
+											"key": "Role",
+											"value": "Admin"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "assign Role to user",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Authentication_Service}}/api/Admin/assignRoleToUser?Email={{Cemail}}&Role=Admin",
+									"host": [
+										"{{Authentication_Service}}"
+									],
+									"path": [
+										"api",
+										"Admin",
+										"assignRoleToUser"
+									],
+									"query": [
+										{
+											"key": "Email",
+											"value": "{{Cemail}}"
+										},
+										{
+											"key": "Role",
+											"value": "Admin"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Workout Server",
+			"item": [
+				{
+					"name": "Workout",
+					"item": [
+						{
+							"name": "GetAllWorkouts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var res = pm.response.json();",
+											"",
+											"pm.collectionVariables.set(\"WorkoutId\" , res.data[0].id)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Workout_Service}}/api/Workout/GetAllWorkouts",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Workout",
+										"GetAllWorkouts"
+									]
+								},
+								"description": "This endpoint retrieves a list of workouts, sorted by the most recently added, along with the user's name and all related exercises. The response will be in JSON format and will include a success status indicator, a message field, and an array of workout objects. Each workout object will contain an ID, name, title, creation date, end date, finished status, notes, and an array of exercise IDs."
+							},
+							"response": []
+						},
+						{
+							"name": "Create-Workout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Title\" : \"third khaled's Workout\",\r\n    \"Notes\" : \"This is my first workout\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Workout_Service}}/api/Workout/create",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Workout",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update-Workout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"old_Title\" : \"First khaled's Workout\",\r\n    \"Title\": \"Morning Workout\",\r\n    \"Finished\": true,\r\n    \"Notes\": \"Focus on cardio and strength training\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Workout_Service}}/api/Workout/Update?workoutId={{WorkoutId}}",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Workout",
+										"Update"
+									],
+									"query": [
+										{
+											"key": "workoutId",
+											"value": "{{WorkoutId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete-Workout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Workout_Service}}/api/Workout/Delete?workout={{WorkoutId}}",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Workout",
+										"Delete"
+									],
+									"query": [
+										{
+											"key": "workout",
+											"value": "{{WorkoutId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AssignExcercises",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "    [\n        \"{{EcersiseId}}\",\n        \"{{EcersiseId1}}\",\n        \"{{EcersiseId2}}\"\n    ]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Workout_Service}}/api/Workout/AssignExcersises?workout={{WorkoutId}}",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Workout",
+										"AssignExcersises"
+									],
+									"query": [
+										{
+											"key": "workout",
+											"value": "{{WorkoutId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Excersises",
+					"item": [
+						{
+							"name": "AllExcercises",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var res = pm.response.json();",
+											"",
+											"pm.collectionVariables.set(\"EcersiseId\" , res.data[0].id)",
+											"pm.collectionVariables.set(\"EcersiseId1\" , res.data[1].id)",
+											"pm.collectionVariables.set(\"EcersiseId2\" , res.data[2].id)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Workout_Service}}/api/Excersise/GetAllExcersises",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Excersise",
+										"GetAllExcersises"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddExcersise",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ExerciseName\": \"feet\",\n    \"TargetMuscle\": \"feet\",\n    \"SecondaryMuscle\": \"\",\n    \"Counts\": 15,\n    \"Groups\": 3\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Workout_Service}}/api/Excersise/Create",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Excersise",
+										"Create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateExcersise",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ExerciseName\": \"deadLeft\",\n    \"TargetMuscle\": \"back\",\n    \"SecondaryMuscle\": \"trie\",\n    \"Counts\": 10,\n    \"Groups\": 4\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Workout_Service}}/api/Excersise/Update?id={{EcersiseId}}",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Excersise",
+										"Update"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{EcersiseId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteExcersise",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Workout_Service}}/api/Excersise/Delete?id={{EcersiseId}}",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Excersise",
+										"Delete"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{EcersiseId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Comments",
+					"item": [
+						{
+							"name": "GetCommentsForWorkouts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var res = pm.response.json();",
+											"",
+											"pm.collectionVariables.set(\"CommentID\" , res.data[0].userId)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Workout_Service}}/api/Comment/GetComments?WorkoutID={{WorkoutId}}",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Comment",
+										"GetComments"
+									],
+									"query": [
+										{
+											"key": "WorkoutID",
+											"value": "{{WorkoutId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetComment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Workout_Service}}/api/Comment/GetComment?id={{CommentID}}",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Comment",
+										"GetComment"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{CommentID}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateComment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"WorkoutId\" : \"{{WorkoutId}}\",\n    \"Text\" : \"This is my first Workout\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Workout_Service}}/api/Comment/CreateComment",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Comment",
+										"CreateComment"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteComment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{Workout_Service}}/api/Comment/DeleteComment?id={{CommentID}}",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Comment",
+										"DeleteComment"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{CommentID}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateComment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{AccessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Text\" : \"This is my first Workout[Updated]\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Workout_Service}}/api/Comment/DeleteComment?id={{CommentID}}",
+									"host": [
+										"{{Workout_Service}}"
+									],
+									"path": [
+										"api",
+										"Comment",
+										"DeleteComment"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{CommentID}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Authentication_Service",
+			"value": "https://localhost:7164",
+			"type": "string"
+		},
+		{
+			"key": "CCode",
+			"value": ""
+		},
+		{
+			"key": "Cemail",
+			"value": ""
+		},
+		{
+			"key": "Workout_Service",
+			"value": "https://localhost:7000",
+			"type": "string"
+		},
+		{
+			"key": "AccessToken",
+			"value": ""
+		},
+		{
+			"key": "RefreshToken",
+			"value": ""
+		},
+		{
+			"key": "WorkoutId",
+			"value": ""
+		},
+		{
+			"key": "EcersiseId",
+			"value": ""
+		},
+		{
+			"key": "WorkoutId1",
+			"value": ""
+		},
+		{
+			"key": "WorkoutId2",
+			"value": ""
+		},
+		{
+			"key": "EcersiseId1",
+			"value": ""
+		},
+		{
+			"key": "EcersiseId2",
+			"value": ""
+		},
+		{
+			"key": "CommentID",
+			"value": ""
+		}
+	]
+}
