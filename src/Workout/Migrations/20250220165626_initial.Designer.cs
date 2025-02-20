@@ -12,8 +12,8 @@ using Workout.Data;
 namespace Workout.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250214153018_CommentsEdits")]
-    partial class CommentsEdits
+    [Migration("20250220165626_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,12 +34,14 @@ namespace Workout.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("WorkoutId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("WorkoutId");
 
@@ -90,21 +92,6 @@ namespace Workout.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Workout.Models.Usercomment", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CommentId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserId", "CommentId");
-
-                    b.HasIndex("CommentId");
-
-                    b.ToTable("UsersComments");
-                });
-
             modelBuilder.Entity("Workout.Models.WorkOut", b =>
                 {
                     b.Property<string>("Id")
@@ -152,30 +139,17 @@ namespace Workout.Migrations
 
             modelBuilder.Entity("Workout.Models.Comment", b =>
                 {
+                    b.HasOne("Workout.Models.User", "user")
+                        .WithMany("comments")
+                        .HasForeignKey("UserId");
+
                     b.HasOne("Workout.Models.WorkOut", "workOut")
                         .WithMany("Comments")
                         .HasForeignKey("WorkoutId");
 
-                    b.Navigation("workOut");
-                });
-
-            modelBuilder.Entity("Workout.Models.Usercomment", b =>
-                {
-                    b.HasOne("Workout.Models.Comment", "comment")
-                        .WithMany("comments")
-                        .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Workout.Models.User", "user")
-                        .WithMany("comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("comment");
-
                     b.Navigation("user");
+
+                    b.Navigation("workOut");
                 });
 
             modelBuilder.Entity("Workout.Models.WorkOut", b =>
@@ -204,11 +178,6 @@ namespace Workout.Migrations
                     b.Navigation("Exercise");
 
                     b.Navigation("Workout");
-                });
-
-            modelBuilder.Entity("Workout.Models.Comment", b =>
-                {
-                    b.Navigation("comments");
                 });
 
             modelBuilder.Entity("Workout.Models.Exercise", b =>

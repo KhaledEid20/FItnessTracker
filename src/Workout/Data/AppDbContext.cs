@@ -18,10 +18,6 @@ namespace Workout.Data
             we.HasKey(we => new { we.ExerciseId, we.WorkoutId }
             ));
 
-            modelBuilder.Entity<Usercomment>(we => 
-            we.HasKey(uc => new { uc.UserId, uc.CommentId }
-            ));
-
             modelBuilder.Entity<User>()
             .HasMany(b => b.workOut)
             .WithOne(x=> x.user)
@@ -43,16 +39,11 @@ namespace Workout.Data
             .WithMany(tr => tr.WorkoutExercises)
             .HasForeignKey(ts => ts.WorkoutId);
 
-
             modelBuilder.Entity<User>()
-            .HasMany(b => b.comments)
-            .WithOne(x=> x.user)
-            .HasForeignKey(y => y.UserId);
-
-            modelBuilder.Entity<Comment>()
             .HasMany(c => c.comments)
-            .WithOne(uc => uc.comment)
-            .HasForeignKey(uc => uc.CommentId);
+            .WithOne(u => u.user)
+            .HasForeignKey(uc => uc.UserId);
+
         }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
@@ -62,6 +53,5 @@ namespace Workout.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<WorkoutExercise> WorkoutExercises { get; set; }
-        public DbSet<Usercomment> UsersComments { get; set; }
     }
 }

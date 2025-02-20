@@ -11,5 +11,6 @@ public class autoMapping : Profile
     {
         CreateMap<WorkOut, GetWorkoutDTO>()
             .ForMember(dest => dest.name , opt => opt.MapFrom(src=>src.user.UserName));
+        CreateMap<Comment, CommentDto>();
     }
 }

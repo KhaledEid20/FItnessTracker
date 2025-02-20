@@ -10,7 +10,7 @@ namespace Workout.Models
         public string Text { get; set; }
 
         // Navigation properties
-        public ICollection<Usercomment> comments { get; set; }
         public WorkOut workOut { get; set; }
+        public User user;
     }
 }

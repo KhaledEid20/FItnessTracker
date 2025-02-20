@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Workout.Migrations
 {
     /// <inheritdoc />
-    public partial class CommentsEdits : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,13 +54,18 @@ namespace Workout.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     WorkoutId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Comments_WorkOuts_WorkoutId",
                         column: x => x.WorkoutId,
@@ -92,39 +97,15 @@ namespace Workout.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "UsersComments",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CommentId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UsersComments", x => new { x.UserId, x.CommentId });
-                    table.ForeignKey(
-                        name: "FK_UsersComments_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UsersComments_Comments_CommentId",
-                        column: x => x.CommentId,
-                        principalTable: "Comments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_WorkoutId",
                 table: "Comments",
                 column: "WorkoutId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersComments_CommentId",
-                table: "UsersComments",
-                column: "CommentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkoutExercises_WorkoutId",
@@ -141,13 +122,10 @@ namespace Workout.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "UsersComments");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "WorkoutExercises");
-
-            migrationBuilder.DropTable(
-                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Exercises");

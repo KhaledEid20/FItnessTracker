@@ -9,5 +9,6 @@ namespace Workout.Repositories.Base
     {
         public IWorkout _workout { get; set; }
         public IExcersise _excersise { get; set; }
+        public IComments _comments { get; set; }
     }
 }
