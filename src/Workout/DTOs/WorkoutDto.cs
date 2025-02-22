@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Workout.Models;
 
 namespace Workout.DTOs
 {
@@ -11,6 +12,7 @@ namespace Workout.DTOs
         public string Title { get; set; }
         public DateTime CreationDate { get; set; }
         public bool Finished { get; set; }
+        public Status Status { get; set; }
         public string Notes { get; set; }
     }
 }
@@ -23,6 +25,7 @@ Example JSON for Postman:
     "Title": "Morning Workout",
     "CreationDate": "2023-10-01T08:30:00Z",
     "Finished": false,
+    "Status" : 0
     "Notes": "Focus on cardio and strength training"
 }
 */

@@ -14,6 +14,7 @@ namespace Workout.Models
         public DateTime CreationDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool Finished { get; set; } = false;
+        public Status Status { get; set; } = Status.Pending;
         public string Notes { get; set; }
         public User user { get; set; }
         public ICollection<WorkoutExercise> WorkoutExercises { get; set; } =  new List<WorkoutExercise>();
