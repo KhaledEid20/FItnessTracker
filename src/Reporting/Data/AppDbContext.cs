@@ -36,4 +36,6 @@ public class AppDbContext : DbContext
     }
     public DbSet<Report> Reports { get; set; }
     public DbSet<Stats> Stats { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<WorkOut> WorkOuts { get; set; }
 }

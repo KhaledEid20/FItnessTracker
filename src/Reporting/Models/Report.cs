@@ -14,10 +14,3 @@ namespace FitnessTracker.Reporting.Models
     }
 }
 
-// Table definition for dbdiagram.io
-Table Report {
-    Id varchar [pk, unique, default: `uuid_generate_v4()`]
-    UserId varchar
-    Title varchar
-    CreatedDate timestamp [default: `now()`]
-}

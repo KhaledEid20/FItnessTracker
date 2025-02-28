@@ -1,11 +1,16 @@
+using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Reporting.Data;
 using Reporting.Middleware;
+using Reporting.Repositories;
+using Reporting.Repositories.Base;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.UseUrls("https://localhost:7163");
 
 builder.Services.AddControllers();
 
@@ -15,6 +20,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 var jwtSetting = builder.Configuration.GetSection("jwtSettings");
 var secret = Environment.GetEnvironmentVariable("SECRET");
 
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
+builder.Services.AddScoped<IReporting , ReportingService>();
 
 builder.Services.AddAuthentication(option => {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -33,6 +43,7 @@ builder.Services.AddAuthentication(option => {
     };
 });
 
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
