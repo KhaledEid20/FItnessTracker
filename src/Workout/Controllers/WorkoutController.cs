@@ -19,7 +19,7 @@ namespace Workout.Controllers
         }
         
         [HttpPost("create")]
-        public async Task<ActionResult> CreateWorkout([FromBody] CreateWorkoutDto workout)
+        public async Task<ActionResult> CreateWorkout([FromBody]CreateWorkoutWithExcersises workout)
         {
             try{
                 var Workout = await _unit._workout.CreateWorkout(workout);
@@ -71,6 +71,15 @@ namespace Workout.Controllers
         public async Task<IActionResult> GetWorkouts(){
             try{
                 return Ok(await _unit._workout.GetAllWorkouts());
+            }
+            catch(Exception ex){
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> UpdateStatus([FromQuery]string workoutId , [FromQuery]int status){
+            try{
+                return Ok(await _unit._workout.UpdateStatus(workoutId , status));
             }
             catch(Exception ex){
                 return BadRequest(ex.Message);

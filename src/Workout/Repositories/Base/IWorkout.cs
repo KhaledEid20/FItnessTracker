@@ -12,9 +12,10 @@ namespace Workout.Repositories.Base
     public interface IWorkout
     {
         Task<ResultDto<IEnumerable<GetWorkoutDTO>>> GetAllWorkouts();
-        Task<ResultDto<string>> CreateWorkout(CreateWorkoutDto workout);
+        Task<ResultDto<string>> CreateWorkout(CreateWorkoutWithExcersises workout);
         Task<ResultDto<string>> UpdateWorkout(WorkoutDto workout , string workoutId);
         Task<ResultDto<string>> DeleteWorkout(string workoutId);
         Task<ResultDto<string>> AssignExerciseToWorkout(List<string> guids , string workoutId);
+        Task<ResultDto<string>> UpdateStatus(string workoutId , int status);
     }
 }

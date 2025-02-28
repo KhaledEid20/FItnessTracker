@@ -21,7 +21,7 @@ namespace Workout.Repositories
 
         public User _user { get; set; }
 
-        public async Task<ResultDto<string>> CreateWorkout(CreateWorkoutDto workout)
+        public async Task<ResultDto<string>> CreateWorkout(CreateWorkoutWithExcersises workout)
         {
             _user = await ValidateUser();
             if (_user == null)
@@ -32,23 +32,38 @@ namespace Workout.Repositories
                     Success = false
                 };
             }
-            try{
-                var neWorkout = new WorkOut(){
-                    UserId = _user.Id,
-                    Title = workout.Title,
-                    CreationDate = DateTime.Now,
-                    EndDate = workout.EndDate,
-                    Notes = workout.Notes
-                };
-                await _context.WorkOuts.AddAsync(neWorkout);
-                await _context.SaveChangesAsync();
-            }
-            catch(Exception ex){
-                return new ResultDto<string>()
-                {
-                    Message = ex.Message,
-                    Success = false
-                };
+            using(var transaction = _context.Database.BeginTransaction()){
+                try{
+                    var neWorkout = new WorkOut(){
+                        UserId = _user.Id,
+                        Title = workout.workout.Title,
+                        CreationDate = DateTime.Now,
+                        EndDate = workout.workout.EndDate,
+                        Notes = workout.workout.Notes
+                    };
+                    await _context.WorkOuts.AddAsync(neWorkout);
+                    await _context.SaveChangesAsync();
+                    if(workout.guids == null){
+                        List<WorkoutExercise> elements = new List<WorkoutExercise>();
+                        foreach(var guid in workout.guids){
+                            elements.Add(new WorkoutExercise{
+                                WorkoutId = neWorkout.Id,
+                                ExerciseId = guid
+                            });
+                        }
+                        await _context.WorkoutExercises.AddRangeAsync(elements);
+                        await _context.SaveChangesAsync();
+                    }
+                    transaction.Commit();
+                }
+                catch(Exception ex){
+                    transaction.Rollback();
+                    return new ResultDto<string>()
+                    {
+                        Message = ex.Message,
+                        Success = false
+                    };
+                }
             }
             return new ResultDto<string>()
             {
@@ -148,7 +163,6 @@ namespace Workout.Repositories
                 });
             }
             try{
-                await _context.WorkoutExercises.AddRangeAsync(elements);
                 await _context.SaveChangesAsync();
             }
             catch(Exception ex){
@@ -202,6 +216,35 @@ namespace Workout.Repositories
             };
             
         }
-
+        public async Task<ResultDto<string>> UpdateStatus(string workoutId , int status)
+        {
+            var workout = _context.WorkOuts.FirstOrDefault(w=> w.Id == workoutId);
+            if(workout == null){
+                return new ResultDto<string>()
+                {
+                    Message = "Workout not found",
+                    Success = false
+                };
+            }
+            if(status == 2) workout.Status = Status.Completed;
+            else if(status == 3) workout.Status = Status.TimeOut;
+            else workout.Status = Status.Pending;
+            try{
+                _context.WorkOuts.Update(workout);
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception ex){
+                return new ResultDto<string>()
+                {
+                    Message = ex.Message,
+                    Success = false
+                };
+            }
+            return new ResultDto<string>()
+            {
+                Message = "Status updated successfully",
+                Success = true
+            };
+        }
     }
 }

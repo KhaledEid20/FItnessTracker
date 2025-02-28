@@ -2,17 +2,16 @@
 
 ## Features
 - [ ] handle The Autherization
-- [ ] Add Controller that edit the status in the database
+- [X] Add Controller that edit the status in the database
 - [x] Finish the report Service
 - [ ] Add gateway Service
 
 ## Bugs
-- [ ] Add the status properties to the postman **Create Workout**
 
 ## Enhancements
-- [ ] let it attach the excersises to the workout on Creation **Use the Transactions**
+- [X] let it attach the excersises to the workout on Creation **Use the Transactions**
 
 ## Documentation
 - [ ] Document the Postman API
 ## Testing
-- [ ] Test the report Service
+- [X] Test the report Service
