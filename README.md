@@ -1,6 +1,5 @@
-# Fitness Tracker System
+# Fitness Tracker System Design & Database
 
-## Design
 This project is a **backend API built with .NET 8**, designed to support a fitness tracking application. It follows a **microservices architecture** where each service is responsible for a specific functionality while sharing a **single database** for centralized data management. The system is designed to be **extensible**, allowing for future updates, including new features and a frontend application.
 
 ## System Design
@@ -11,9 +10,9 @@ Below is the system design diagram illustrating the architecture of the fitness 
 
 ### System Components:
 - **Gateway Service**: Handles incoming requests and routes them to the appropriate services.
-- **Identity Service**: Manages user authentication and authorization.
-- **Reporting Service**: Generates and retrieves user reports.
-- **Workout Service**: Handles workout-related operations.
+- **Identity Service**: Manages user authentication and authorization using **JWT** for secure token-based authentication.
+- **Reporting Service**: Generates and retrieves user reports, utilizing **JWT** for validation and secure access control.
+- **Workout Service**: Handles workout-related operations, utilizing **JWT** for validation and secure access control.
 - **Database**: Stores all application data, including users, workouts, reports, and comments.
 
 This system design ensures scalability, security, and efficient data handling for the fitness tracking application.
