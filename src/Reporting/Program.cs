@@ -10,7 +10,7 @@ using Reporting.Repositories.Base;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseUrls("https://localhost:7163");
+builder.WebHost.UseUrls("http://localhost:7163");
 
 builder.Services.AddControllers();
 

@@ -4,7 +4,7 @@
 - [ ] handle The Autherization
 - [X] Add Controller that edit the status in the database
 - [x] Finish the report Service
-- [ ] Add gateway Service
+- [X] Add gateway Service
 
 ## Bugs
 

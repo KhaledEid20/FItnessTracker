@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Workout.Data;
@@ -43,7 +39,7 @@ namespace Workout.Repositories
                     };
                     await _context.WorkOuts.AddAsync(neWorkout);
                     await _context.SaveChangesAsync();
-                    if(workout.guids == null){
+                    if(workout.guids != null){
                         List<WorkoutExercise> elements = new List<WorkoutExercise>();
                         foreach(var guid in workout.guids){
                             elements.Add(new WorkoutExercise{

@@ -23,7 +23,7 @@ namespace Workout.Middleware
             {
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Unauthorized: Missing or invalid token.");
-                return; // 🚀 Stops execution to prevent calling _next(context)
+                return;
             }
 
             var token = authorizationHeader.Replace("Bearer ", "");
